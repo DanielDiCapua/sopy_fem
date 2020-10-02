@@ -2,10 +2,10 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import globalvars
-from initialization import initialization
-from bars_utils import ElemTrusses_IntForces, ElemBars_IntFluxes
-from plot_solids import plot_contour
+import sopy_fem.globalvars as globalvars
+from sopy_fem.initialization import initialization
+from sopy_fem.bars_utils import ElemTrusses_IntForces, ElemBars_IntFluxes
+from sopy_fem.plot_solids import plot_contour
 
 def plotMesh(figTitle="Mesh"):
     window = plt.figure(figTitle)

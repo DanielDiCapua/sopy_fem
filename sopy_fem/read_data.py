@@ -1,6 +1,6 @@
 import json
 import os
-import globalvars
+import sopy_fem.globalvars as globalvars
 
 def read_data():
     

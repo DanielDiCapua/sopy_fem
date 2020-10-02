@@ -1,9 +1,9 @@
 import globalvars
 import numpy as np
 import math
-from initialization import initialization
-from  gauss_quadrature import GaussQuadrature, Set_Ngauss
-from dmat import dmat_Solids2D
+from sopy_fem.initialization import initialization
+from sopy_fem.gauss_quadrature import GaussQuadrature, Set_Ngauss
+from sopy_fem.dmat import dmat_Solids2D
 
 def GiveNdime(ElemType):
     if(ElemType == "BAR02" or ElemType == "BAR03"):

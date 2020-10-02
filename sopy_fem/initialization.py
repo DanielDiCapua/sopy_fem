@@ -1,5 +1,5 @@
-import globalvars
 import numpy as np
+import sopy_fem.globalvars as globalvars
 
 def GiveNdof(ElemType, ProblemType):
   if(ProblemType == "Structural_Mechanics"):

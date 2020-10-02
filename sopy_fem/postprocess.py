@@ -1,12 +1,12 @@
 import globalvars
 import numpy as np
 import json
-from initialization import initialization
-from solids_utils import Smooth_Strains, Smooth_Stresses, Smooth_Forces, GiveNComp
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
-from plot_solids import plot_contour
-from plot_trusses import plotMesh, plotDeformed, plotElemIntFluxes, plotNodalBarResult
+from sopy_fem.initialization import initialization
+from sopy_fem.solids_utils import Smooth_Strains, Smooth_Stresses, Smooth_Forces, GiveNComp
+from sopy_fem.plot_solids import plot_contour
+from sopy_fem.plot_trusses import plotMesh, plotDeformed, plotElemIntFluxes, plotNodalBarResult
 
 #Set plotting defaults
 gray = '#757575'

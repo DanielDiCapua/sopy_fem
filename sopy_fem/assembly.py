@@ -1,11 +1,11 @@
-import globalvars
 import numpy as np
 import math
-from initialization import initialization
-from solids_utils import Bmat_TR03, Calc_Bmat
-from dmat import dmat_Solids2D, giveLocalStiffness
-from gauss_quadrature import Set_Ngauss, GaussQuadrature
-from solids_utils import derivCartesian, GiveNdof, GiveNnodes
+import sopy_fem.globalvars as globalvars
+from sopy_fem.initialization import initialization
+from sopy_fem.solids_utils import Bmat_TR03, Calc_Bmat
+from sopy_fem.dmat import dmat_Solids2D, giveLocalStiffness
+from sopy_fem.gauss_quadrature import Set_Ngauss, GaussQuadrature
+from sopy_fem.solids_utils import derivCartesian, GiveNdof, GiveNnodes
 
 def assembly():
     stiff_assembly()

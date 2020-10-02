@@ -1,8 +1,8 @@
 import numpy as np
 import math
-import globalvars
-from initialization import initialization
-from dmat import giveLocalStiffness
+import sopy_fem.globalvars as globalvars
+from sopy_fem.initialization import initialization
+from sopy_fem.dmat import giveLocalStiffness
 
 def ElemTrusses_IntForces():
     globalvars.results["ElemIntForces"] = []

@@ -1,5 +1,5 @@
-import globalvars
 import numpy as np
+import sopy_fem.globalvars as globalvars
 
 def dmat_Solids2D(material):
     dmat = np.zeros((3, 3), dtype=float)

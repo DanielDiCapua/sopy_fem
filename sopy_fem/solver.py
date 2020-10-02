@@ -1,6 +1,6 @@
 import globalvars
 import numpy as np
-from initialization import initialization
+from sopy_fem.initialization import initialization
 
 def solve():
     n = globalvars.num_unknows
