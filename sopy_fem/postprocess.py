@@ -1,8 +1,8 @@
-import globalvars
 import numpy as np
 import json
 import matplotlib.pyplot as plt
 import matplotlib.tri as tri
+import sopy_fem.globalvars as globalvars
 from sopy_fem.initialization import initialization
 from sopy_fem.solids_utils import Smooth_Strains, Smooth_Stresses, Smooth_Forces, GiveNComp
 from sopy_fem.plot_solids import plot_contour

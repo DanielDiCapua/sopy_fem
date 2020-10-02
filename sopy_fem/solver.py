@@ -1,5 +1,5 @@
-import globalvars
 import numpy as np
+import sopy_fem.globalvars as globalvars
 from sopy_fem.initialization import initialization
 
 def solve():

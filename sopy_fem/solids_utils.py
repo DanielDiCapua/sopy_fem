@@ -1,6 +1,6 @@
-import globalvars
 import numpy as np
 import math
+import sopy_fem.globalvars as globalvars
 from sopy_fem.initialization import initialization
 from sopy_fem.gauss_quadrature import GaussQuadrature, Set_Ngauss
 from sopy_fem.dmat import dmat_Solids2D
