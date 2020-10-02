@@ -1,0 +1,35 @@
+{
+    "Voltage": [
+        {
+            "Node": 1,
+            "Voltage": "1.0000e+01"
+        },
+        {
+            "Node": 2,
+            "Voltage": "1.6667e+01"
+        },
+        {
+            "Node": 3,
+            "Voltage": "2.3333e+01"
+        },
+        {
+            "Node": 4,
+            "Voltage": "3.0000e+01"
+        }
+    ],
+    "ElemIntFluxes": [
+        "1.6000e-04",
+        "1.6000e-04",
+        "1.6000e-04"
+    ],
+    "Reactions": [
+        {
+            "Node": 1,
+            "Current_Intensity": "-1.6000e-04"
+        },
+        {
+            "Node": 4,
+            "Current_Intensity": "1.6000e-04"
+        }
+    ]
+}
