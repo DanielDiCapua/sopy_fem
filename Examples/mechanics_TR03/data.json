@@ -1,0 +1,115 @@
+{
+    "ProblemType": "Structural_Mechanics",
+    "AnalysisType": "StaticAnalysis",
+    "Mesh": {
+        "ElemType": "TR03",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            },
+            {
+                "x": 2.0,
+                "y": 0.0
+            },
+            {
+                "x": 0.0,
+                "y": 1.0
+            },
+            {
+                "x": 1.0,
+                "y": 1.0
+            },
+            {
+                "x": 2.0,
+                "y": 1.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 5, 4],
+                "MaterialId": 1
+            },            {
+                "Connectivities": [1, 2, 5],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 6, 5],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 3, 6],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Plane_Type": "Plane_Stress",
+            "Young": 20000,
+            "Poisson": 0.3,
+            "Thickness": 0.1
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        },
+        {
+            "Node": 4,
+            "Activation": [1, 0],
+            "Values": [0.0, 0.0]
+        }
+    ],
+    "Loads": {
+        "Point_Loads": [
+            {
+                "Node": 3,
+                "Values": [0.0, -10.0]
+            }
+        ],
+        "Body_Loads": [
+            {
+                "Elem": 1,
+                "qy": -20
+            },
+            {
+                "Elem": 2,
+                "qy": -20
+            },
+            {
+                "Elem": 3,
+                "qy": -20
+            },
+            {
+                "Elem": 4,
+                "qy": -20
+            }
+        ],
+        "Line_Loads": [
+            {
+                "Node_ini": 4,
+                "Node_end": 5,
+                "qy": -10
+            },
+            {
+                "Node_ini": 5,
+                "Node_end": 6,
+                "qx": 0,
+                "qy": -10
+            }
+        ]
+    },
+    "Postprocess": {
+        "Show_displacements": true,
+        "Show_strains": true,
+        "Show_stresses": true,
+        "Show_reactions": true
+    }
+}

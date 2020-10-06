@@ -2,10 +2,10 @@ import numpy as np
 import math
 import sopy_fem.globalvars as globalvars
 from sopy_fem.initialization import initialization
-from sopy_fem.solids_utils import Bmat_TR03, Calc_Bmat
+from sopy_fem.solids_utils import Bmat_TR03, Calc_Bmat, derivCartesian, GiveNdof, GiveNnodes, giveElemVolume
 from sopy_fem.dmat import dmat_Solids2D, giveLocalStiffness
 from sopy_fem.gauss_quadrature import Set_Ngauss, GaussQuadrature
-from sopy_fem.solids_utils import derivCartesian, GiveNdof, GiveNnodes
+
 
 def assembly():
     stiff_assembly()
@@ -37,6 +37,7 @@ def stiff_assembly():
 
 def loads_assembly():
     Loads = globalvars.data["Loads"]
+    elemType = globalvars.data["Mesh"]["ElemType"]
 
     if ("Point_Loads" in Loads):
         doflist = np.zeros((globalvars.ndof), dtype=int)
@@ -50,9 +51,13 @@ def loads_assembly():
                 idof += 1
             assamf(doflist, fvect)   
 
-    if ("Surface_Loads" in Loads):
-        print("There is not surface loads yet...")
+    if ("Line_Loads" in Loads):
+        for lineLoad in Loads["Line_Loads"]:
+            lineLoadsAssembly(lineLoad)
 
+    if("Body_Loads" in Loads):
+        for elemLoad in Loads["Body_Loads"]:
+            bodyLoadsAssembly(elemLoad,elemType)
         
 def stiffness_BAR02(elem):
     mat_id = elem["MaterialId"] - 1
@@ -150,6 +155,60 @@ def stiffnessMatCalc(elem, ElemType, ProblemType, Dmat):
         rigimat_pg = np.matmul(Bmat.transpose(), DxBmat) * det_Jac * W[igauss]
         rigimat += rigimat_pg
     return rigimat
+
+def bodyLoadsAssembly(elemLoad, elemType):
+    elemIndex = elemLoad["Elem"] -1
+    elem = globalvars.data["Mesh"]["Elements"][elemIndex]
+    qvec = np.zeros((globalvars.ndof), dtype=float)
+    nnodes = GiveNnodes(elemType)
+    volume = giveElemVolume(elem, elemType)
+    fact = volume/float(nnodes) #This operation is only valid for linear elements
+    if("qx" in elemLoad):
+        qvec[0]=elemLoad["qx"]*fact
+    if(globalvars.ndof==2):
+        if("qy" in elemLoad):
+            qvec[1]=elemLoad["qy"] * fact
+
+    doflist = np.zeros((globalvars.ndof), dtype=int)
+    fvect = np.zeros((globalvars.ndof), dtype=float)
+    for node in elem["Connectivities"]:
+        id_node =node - 1
+        idof = 0
+        for igl in range(globalvars.ndof):
+            doflist[idof] = globalvars.madgln[id_node, igl]
+            fvect[idof] = qvec[igl]
+            idof += 1
+        assamf(doflist, fvect) 
+
+def lineLoadsAssembly(lineLoad):
+    qvec = np.zeros((globalvars.ndof), dtype=float)
+
+    nodeIni_idx = lineLoad["Node_ini"] - 1
+    x1 = globalvars.data["Mesh"]["Nodes"][nodeIni_idx]["x"]
+    y1 = globalvars.data["Mesh"]["Nodes"][nodeIni_idx]["y"]
+    nodeEnd_idx = lineLoad["Node_end"] - 1
+    x2 = globalvars.data["Mesh"]["Nodes"][nodeEnd_idx]["x"]
+    y2 = globalvars.data["Mesh"]["Nodes"][nodeEnd_idx]["y"]
+    nodeList = [nodeIni_idx, nodeEnd_idx]
+
+    length = math.sqrt((x2 - x1)** 2 + (y2 - y1)** 2)
+    fact = 0.5*length
+
+    if("qx" in lineLoad):
+        qvec[0]=lineLoad["qx"]*fact
+    if(globalvars.ndof==2):
+        if("qy" in lineLoad):
+            qvec[1]=lineLoad["qy"]*fact
+
+    doflist = np.zeros((globalvars.ndof), dtype=int)
+    fvect = np.zeros((globalvars.ndof), dtype=float)
+    for node in nodeList:
+        idof = 0
+        for igl in range(globalvars.ndof):
+            doflist[idof] = globalvars.madgln[node, igl]
+            fvect[idof] = qvec[igl]
+            idof += 1
+        assamf(doflist, fvect)  
 
 
 def assamk(doflist, rigimat):

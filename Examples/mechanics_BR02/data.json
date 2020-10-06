@@ -56,6 +56,20 @@
                 "Node": 4,
                 "Values": [10.0]
             }
+        ],
+        "Body_Loads": [
+            {
+                "Elem":1,
+                "qx": 10
+            },
+            {
+                "Elem":2,
+                "qx": 10
+            },
+            {
+                "Elem":3,
+                "qx": 10
+            }
         ]
     },
     "Postprocess": {

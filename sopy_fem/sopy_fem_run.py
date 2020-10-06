@@ -6,7 +6,7 @@ from sopy_fem.solver import solve
 from sopy_fem.postprocess import postprocess
 
 
-def main():
+def sopy_fem_run():
     read_data()
     initialization()
     assembly()
@@ -14,6 +14,6 @@ def main():
     postprocess()
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__sopy_fem_run__':
+    sopy_fem_run()
     

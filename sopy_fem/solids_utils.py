@@ -152,7 +152,7 @@ def DerivNatCoord(ElemType, pos_pg):
     deriv[0,2] =  0
     deriv[1,0] = -1
     deriv[1,1] =  0
-    deriv[1, 2] = -1
+    deriv[1, 2] = 1
   elif(ElemType == "TR06"):
     deriv[0,0]=-3+(s+t)*4
     deriv[0,1]=(1-s*2-t)*4
@@ -245,7 +245,7 @@ def det_Jacob(elem, ElemType, Nodes, pos_pg):
   jacobMat = np.matmul(deriv_nat,corel)
   det_jacobMat = np.linalg.det(jacobMat)
   if (det_jacobMat==0):
-    raise NameError("Error: Jacobian negative")
+    raise Exception("Error: Jacobian negative")
   return det_jacobMat
 
 def derivCartesian(elem, ElemType, Nodes, pos_pg):
@@ -263,8 +263,8 @@ def derivCartesian(elem, ElemType, Nodes, pos_pg):
   deriv_nat = DerivNatCoord(ElemType, pos_pg)
   jacobMat = np.matmul(deriv_nat, corel)
   det_jacobMat = np.linalg.det(jacobMat)
-  if (det_jacobMat==0):
-    raise NameError("Error: Jacobian negative")
+  if (det_jacobMat<=0):
+    raise Exception("Error: Jacobian negative")
   JacobMat_inv = np.linalg.inv(jacobMat)
   derivCart = np.matmul(JacobMat_inv, deriv_nat)
   return det_jacobMat, derivCart
@@ -545,5 +545,33 @@ def NtxN(ElemType, pos_pg, ProblemType):
         NtxN[irow,icol] = fform[inode] * fform[jnode]
   
   return NtxN
+
+def giveElemVolume(elem, elemType):
+  mat_id = elem["MaterialId"] - 1
+  material = globalvars.data["Materials"][mat_id]
+  if(elemType == "BR02" or elemType == "TRUSS02"):
+    area = material["Area"]
+    node1 = elem["Connectivities"][0] - 1
+    x1 = globalvars.data["Mesh"]["Nodes"][node1]["x"]
+    y1 = globalvars.data["Mesh"]["Nodes"][node1]["y"]
+    node2 = elem["Connectivities"][1] - 1
+    x2 = globalvars.data["Mesh"]["Nodes"][node2]["x"]
+    y2 = globalvars.data["Mesh"]["Nodes"][node2]["y"]
+    length = math.sqrt((x2 - x1)** 2 + (y2 - y1)** 2)
+    volume = area*length
+  elif(elemType == "TR03" or elemType == "QU04"):
+    thickness = 1.0
+    if(material["Plane_Type"] == "Plane_Stress"):
+        thickness = material["Thickness"]
+    ngauss = Set_Ngauss(elemType)
+    Nodes = globalvars.data["Mesh"]["Nodes"]
+    pos_pg, W = GaussQuadrature(elemType)
+    area = 0.0
+    for igauss in range(ngauss):
+      det_Jac, _ = derivCartesian(elem, elemType, Nodes, pos_pg[igauss])
+      area += det_Jac * W[igauss]
+    volume = area * thickness
+  return volume
+
 
 
