@@ -1,7 +1,6 @@
 import json
 
-def sopy_fem_help():
-    exampleType = "structural_TRUSS02"
+def sopy_fem_help(exampleType):
     if(exampleType == "structural_TRUSS02"):
         jsonText = structural_TRUSS02_jsonData()
 
@@ -77,5 +76,5 @@ def structural_TRUSS02_jsonData():
         }
 }
 
-if __name__ == '__sopy_fem_help__':
-    sopy_fem_help()
+# if __name__ == '__sopy_fem_help__':
+#     sopy_fem_help()
