@@ -1,35 +1,35 @@
 {
-    "Temperatures": [
+    "Voltage": [
         {
             "Node": 1,
-            "Temp": "1.0000e+01"
+            "Voltage": "0.0000e+00"
         },
         {
             "Node": 2,
-            "Temp": "1.6667e+01"
+            "Voltage": "1.6667e+01"
         },
         {
             "Node": 3,
-            "Temp": "2.3333e+01"
+            "Voltage": "3.3333e+01"
         },
         {
             "Node": 4,
-            "Temp": "3.0000e+01"
+            "Voltage": "5.0000e+01"
         }
     ],
     "ElemIntFluxes": [
-        "3.3333e-01",
-        "3.3333e-01",
-        "3.3333e-01"
+        "4.0000e-04",
+        "4.0000e-04",
+        "4.0000e-04"
     ],
     "Reactions": [
         {
             "Node": 1,
-            "Flux": "-3.3333e-01"
+            "Current_Intensity": "-4.0000e-04"
         },
         {
             "Node": 4,
-            "Flux": "3.3333e-01"
+            "Current_Intensity": "4.0000e-04"
         }
     ]
 }

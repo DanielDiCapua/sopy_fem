@@ -36,29 +36,32 @@ def stiff_assembly():
 
 
 def loads_assembly():
-    Loads = globalvars.data["Loads"]
-    elemType = globalvars.data["Mesh"]["ElemType"]
+    if ("Loads" in globalvars.data):
+        Loads = globalvars.data["Loads"]
+        elemType = globalvars.data["Mesh"]["ElemType"]
 
-    if ("Point_Loads" in Loads):
-        doflist = np.zeros((globalvars.ndof), dtype=int)
-        fvect = np.zeros((globalvars.ndof), dtype=float)
-        for pointLoad in Loads["Point_Loads"]:
-            id_node = pointLoad["Node"] - 1
-            idof = 0
-            for igl in range(globalvars.ndof):
-                doflist[idof] = globalvars.madgln[id_node, igl]
-                fvect[idof] = pointLoad["Values"][igl]
-                idof += 1
-            assamf(doflist, fvect)   
+        if ("Point_Loads" in Loads):
+            doflist = np.zeros((globalvars.ndof), dtype=int)
+            fvect = np.zeros((globalvars.ndof), dtype=float)
+            for pointLoad in Loads["Point_Loads"]:
+                id_node = pointLoad["Node"] - 1
+                idof = 0
+                for igl in range(globalvars.ndof):
+                    doflist[idof] = globalvars.madgln[id_node, igl]
+                    fvect[idof] = pointLoad["Values"][igl]
+                    idof += 1
+                assamf(doflist, fvect)   
 
-    if ("Line_Loads" in Loads):
-        for lineLoad in Loads["Line_Loads"]:
-            lineLoadsAssembly(lineLoad)
+        if ("Line_Loads" in Loads):
+            for lineLoad in Loads["Line_Loads"]:
+                lineLoadsAssembly(lineLoad)
 
-    if("Body_Loads" in Loads):
-        for elemLoad in Loads["Body_Loads"]:
-            bodyLoadsAssembly(elemLoad,elemType)
-        
+        if("Body_Loads" in Loads):
+            for elemLoad in Loads["Body_Loads"]:
+                bodyLoadsAssembly(elemLoad,elemType)
+
+
+
 def stiffness_BAR02(elem):
     mat_id = elem["MaterialId"] - 1
     material = globalvars.data["Materials"][mat_id]

@@ -27,7 +27,7 @@ def postprocess():
         plotDisplacements()
 
     if(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
-        if("Show_strains" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_strains"]):
+        if ("Show_strains" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_strains"]):
             plotStrains()
         
         if("Show_stresses" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_stresses"]):
@@ -160,7 +160,7 @@ def plotStresses():
     if(ncomp == 3):
         plot_contour(mesh, nodal_Sigma[:,0], "Stresses Sigma_x", r"$\sigma_{x}$")
         plot_contour(mesh, nodal_Sigma[:,1], "Stresses Sigma_y", r"$\sigma_{y}$")
-        plot_contour(mesh, nodal_Sigma[:, 2], "Stresses Tau_xy", r"$\tau_{xy}$")
+        plot_contour(mesh, nodal_Sigma[:,2], "Stresses Tau_xy", r"$\tau_{xy}$")
         
 
 def plotForces():

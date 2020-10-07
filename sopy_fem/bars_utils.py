@@ -68,6 +68,8 @@ def ElemBars_IntFluxes():
             idire = globalvars.madgln[node[inode], 0]
             var_vec[inode] = globalvars.u_vec[idire]
         
+        if (globalvars.data["ProblemType"] == "Thermal"):
+            k *= (-1.0)
         flux = k * (var_vec[1] - var_vec[0])
         ElemIntFluxes[ielem] = flux
         fluxFormatted = "{:10.4e}".format(flux)

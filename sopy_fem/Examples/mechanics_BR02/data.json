@@ -9,15 +9,15 @@
                 "y": 0.0
             },
             {
-                "x": 1.0,
-                "y": 0.0
-            },
-            {
                 "x": 2.0,
                 "y": 0.0
             },
             {
-                "x": 3.0,
+                "x": 4.0,
+                "y": 0.0
+            },
+            {
+                "x": 6.0,
                 "y": 0.0
             }
         ],
@@ -38,9 +38,8 @@
     },
     "Materials": [
         {
-            "Young": 20000,
-            "Density": 7800,
-            "Area": 0.01
+            "Young": 4.0e9,
+            "Area": 0.02
         }
     ],
     "Constraints": [
@@ -54,21 +53,24 @@
         "Point_Loads": [
             {
                 "Node": 4,
-                "Values": [10.0]
+                "Values": [300.0e3]
             }
         ],
-        "Body_Loads": [
+        "Line_Loads": [
             {
-                "Elem":1,
-                "qx": 10
+                "Node_ini": 1,
+                "Node_end": 2,
+                "qx": 200e3
             },
             {
-                "Elem":2,
-                "qx": 10
+                "Node_ini": 2,
+                "Node_end": 3,
+                "qx": 200e3
             },
             {
-                "Elem":3,
-                "qx": 10
+                "Node_ini": 3,
+                "Node_end": 4,
+                "qx": 200e3
             }
         ]
     },

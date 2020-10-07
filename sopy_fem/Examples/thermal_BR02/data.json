@@ -1,5 +1,5 @@
 {
-    "ProblemType": "Electrical",
+    "ProblemType": "Thermal",
     "AnalysisType": "StaticAnalysis",
     "Mesh": {
         "ElemType": "BAR02",
@@ -38,8 +38,8 @@
     },
     "Materials": [
         {
-            "Electrical_Conductivity": 0.03,
-            "Area": 0.0008
+            "Thermal_Conductivity": 5,
+            "Area": 1.0
         }
     ],
     "Constraints": [
@@ -54,13 +54,9 @@
             "Values": [30.0]
         }
     ],
-    "Loads": {
-        "Point_Loads": [ 
-        ]
-    },
     "Postprocess": {
-        "Show_voltage": true,
-        "Show_current_intensity": true,
+        "Show_temperatures": true,
+        "Show_thermal_fluxes": true,
         "Show_reactions": true
     }
 }

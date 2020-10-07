@@ -285,9 +285,10 @@ def Smooth_Strains():
       globalvars.Eps_elem_vec[icomp] = np.zeros((num_elems, ngauss), dtype=float)
     ielem = 0
     for elem in globalvars.data["Mesh"]["Elements"]:
-        if(ElemType == "TR03"):
+        if (ElemType == "TR03"):
           Esp_vec_TR03 = Strain_TR03(elem)
-          Eps_vec[:ncomp,:] = Esp_vec_TR03[:ncomp]
+          for igauss in range(ngauss):
+            Eps_vec[:ncomp,igauss] = Esp_vec_TR03[:ncomp]
         else:
           for igauss in range(ngauss):
             Eps_vec[:, igauss] = Strain_Solid(elem, ElemType, ProblemType, igauss)
@@ -325,7 +326,8 @@ def Smooth_Stresses():
     for elem in globalvars.data["Mesh"]["Elements"]:
         if (ElemType == "TR03"):
           Sigma_vec_TR03 = Stress_TR03(elem)
-          Sigma_vec[:ncomp,:] = Sigma_vec_TR03[:ncomp]
+          for igauss in range(ngauss):
+            Sigma_vec[:ncomp,igauss] = Sigma_vec_TR03[:ncomp]
         else:
           for igauss in range(ngauss):
             if(len(globalvars.Eps_elem_vec[0]) == 0):
