@@ -6,9 +6,9 @@ from sopy_fem.gauss_quadrature import GaussQuadrature, Set_Ngauss
 from sopy_fem.dmat import dmat_Solids2D
 
 def GiveNdime(ElemType):
-    if(ElemType == "BAR02" or ElemType == "BAR03"):
+    if(ElemType == "BAR02" or ElemType == "BAR03" or ElemType == "TRUSS02"):
         ndime=1
-    elif(ElemType == "TRUSS02" or ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
+    elif(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
       ndime=2
     return ndime
 
@@ -39,7 +39,7 @@ def GiveNdof(ElemType, ProblemType):
   return ndof
 
 def GiveNnodes(ElemType):
-  if(ElemType == "BAR02"):
+  if(ElemType == "BAR02" or ElemType == "TRUSS02"):
     nnodes = 2
   elif(ElemType == "BAR03"):
     nnodes = 3
@@ -55,20 +55,20 @@ def GiveNnodes(ElemType):
     nnodes = 9
   return nnodes
 
-def FuncForm(ElemType, pos_pg):
+def FuncForm(ElemType, pos_pg, igauss):
   ndime = GiveNdime(ElemType)
   if(ndime == 1):
-    s = pos_pg[0]
+    s = pos_pg[igauss, 0]
     t = 0
   elif(ndime == 2):
-    s = pos_pg[0]
-    t = pos_pg[1]
+    s = pos_pg[igauss, 0]
+    t = pos_pg[igauss, 1]
 
   nnodes = GiveNnodes(ElemType)
   fform = np.zeros((nnodes), dtype=float)
   if(ElemType == "BAR02" or ElemType == "TRUSS02"):
-    fform[0] = 0.5 * (1 - s)
-    fform[1] = 0.5 * (1 + s)
+    fform[0] = 0.5 * (1.0 - s)
+    fform[1] = 0.5 * (1.0 + s)
   elif(ElemType == "BAR03"):
     fform[0] = 0.5 * s * (s - 1)
     fform[1] = (1 + s) * (1 - s)
@@ -517,36 +517,6 @@ def Calc_Bmat(ElemType, derivCart, ProblemType):
         B_matrix[2, col_ini] = derivCart[1, inode]
         B_matrix[2, col_ini + 1] = derivCart[0, inode]
   return B_matrix
-
-def NtxN(ElemType, pos_pg, ProblemType):
-  fform = FuncForm(ElemType, pos_pg)
-  nnodes = GiveNnodes(ElemType)
-  ndime = GiveNnodes(ElemType)
- 
-  if(ProblemType == "Thermal"):
-    nrows = nnodes
-    ncols = nnodes
-    ngl = 1
-  elif(ProblemType == "Structural_Mechanics"):
-    if (ndime == 1):
-      nrows = nnodes
-      ncols = nnodes
-      ngl = 1
-    elif(ndime == 2):
-      nrows = nnodes * 2
-      ncols = nnodes * 2
-      ngl = 3
-
-  NtxN = np.zeros((nrows,ncols), dtype=float)
-
-  for inode in range(nnodes):
-    for jnode in range(nnodes):
-      for igl in range(ngl):
-        irow = inode * ngl + igl
-        icol = jnode * ngl + igl
-        NtxN[irow,icol] = fform[inode] * fform[jnode]
-  
-  return NtxN
 
 def giveElemVolume(elem, elemType):
   mat_id = elem["MaterialId"] - 1

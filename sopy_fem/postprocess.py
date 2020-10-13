@@ -22,47 +22,48 @@ plt.rcParams["axes.spines.right"] = False
 plt.rcParams["axes.spines.top"] = False
 
 def postprocess():
-    ElemType = globalvars.data["Mesh"]["ElemType"]
-    if("Show_displacements" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_displacements"]):
-        plotDisplacements()
+    if(globalvars.data["AnalysisType"] == "StaticAnalysis"):
+        ElemType = globalvars.data["Mesh"]["ElemType"]
+        if("Show_displacements" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_displacements"]):
+            plotDisplacements()
 
-    if(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
-        if ("Show_strains" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_strains"]):
-            plotStrains()
+        if(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
+            if ("Show_strains" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_strains"]):
+                plotStrains()
+            
+            if("Show_stresses" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_stresses"]):
+                plotStresses()
+
+            if("Show_forces" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_forces"]):
+                plotForces()
+        elif (ElemType == "BAR02" or ElemType == "BAR03" or ElemType == "TRUSS02"):
+            plt.rcParams["axes.spines.right"] = True
+            plt.rcParams["axes.spines.top"] = True
+            plotMesh()
+            if("Show_forces" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_forces"]):
+                plotElemIntFluxes("Axial Forces", "N")
+
+            if ("Show_temperatures" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_temperatures"]):
+                plotTemperatures()
+
+            if ("Show_voltage" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_voltage"]):
+                plotVoltage()
+
+            if("Show_thermal_fluxes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_thermal_fluxes"]):
+                plotElemIntFluxes("Thermal Fluxes", "q (W)")
+
+            if("Show_current_intensity" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_current_intensity"]):
+                plotElemIntFluxes("Current Intensity", "I (A)")                
+
+
+        if("Show_reactions" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_reactions"]):
+            writeReactions()
+
+        resultsFile = globalvars.dataFileName.replace(".json", ".res.json")
+        with open(resultsFile, 'w') as json_file:
+            json.dump(globalvars.results, json_file, indent = 4)
         
-        if("Show_stresses" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_stresses"]):
-            plotStresses()
-
-        if("Show_forces" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_forces"]):
-            plotForces()
-    elif (ElemType == "BAR02" or ElemType == "BAR03" or ElemType == "TRUSS02"):
-        plt.rcParams["axes.spines.right"] = True
-        plt.rcParams["axes.spines.top"] = True
-        plotMesh()
-        if("Show_forces" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_forces"]):
-            plotElemIntFluxes("Axial Forces", "N")
-
-        if ("Show_temperatures" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_temperatures"]):
-            plotTemperatures()
-
-        if ("Show_voltage" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_voltage"]):
-            plotVoltage()
-
-        if("Show_thermal_fluxes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_thermal_fluxes"]):
-            plotElemIntFluxes("Thermal Fluxes", "q (W)")
-
-        if("Show_current_intensity" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_current_intensity"]):
-            plotElemIntFluxes("Current Intensity", "I (A)")                
-
-
-    if("Show_reactions" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_reactions"]):
-        writeReactions()
-
-    resultsFile = globalvars.dataFileName.replace(".json", ".res.json")
-    with open(resultsFile, 'w') as json_file:
-        json.dump(globalvars.results, json_file, indent = 4)
-    
-    plt.show()
+        plt.show()
 
 def plotDisplacements():
     mesh = globalvars.data["Mesh"]

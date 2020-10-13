@@ -74,6 +74,11 @@ def initialization():
     globalvars.asload = np.zeros((globalvars.neq), dtype=float)
     globalvars.u_vec = np.zeros((globalvars.neq), dtype=float)
 
+    if(globalvars.data["ProblemType"] == "Structural_Mechanics" and globalvars.data["AnalysisType"] == "DynamicsAnalysis"):
+      globalvars.amassmat = np.zeros((globalvars.neq, globalvars.neq), dtype=float)
+      globalvars.natfreq_vec = np.zeros((globalvars.neq), dtype=float)
+      globalvars.vibrationModes = np.zeros((globalvars.neq, globalvars.neq), dtype=float)
+
     num_known = globalvars.neq - globalvars.num_unknows
     globalvars.u_known = np.zeros((num_known), dtype=float)
     for ipres in range(len(globalvars.data["Constraints"])):

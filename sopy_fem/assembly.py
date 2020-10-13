@@ -2,7 +2,7 @@ import numpy as np
 import math
 import sopy_fem.globalvars as globalvars
 from sopy_fem.initialization import initialization
-from sopy_fem.solids_utils import Bmat_TR03, Calc_Bmat, derivCartesian, GiveNdof, GiveNnodes, giveElemVolume
+from sopy_fem.solids_utils import Bmat_TR03, Calc_Bmat, derivCartesian, GiveNdof, GiveNnodes, giveElemVolume, FuncForm
 from sopy_fem.dmat import dmat_Solids2D, giveLocalStiffness
 from sopy_fem.gauss_quadrature import Set_Ngauss, GaussQuadrature
 
@@ -10,6 +10,8 @@ from sopy_fem.gauss_quadrature import Set_Ngauss, GaussQuadrature
 def assembly():
     stiff_assembly()
     loads_assembly()
+    if(globalvars.data["ProblemType"] == "Structural_Mechanics" and globalvars.data["AnalysisType"] == "DynamicsAnalysis"):
+        mass_assembly()
 
 def stiff_assembly():
     mesh_type = globalvars.data["Mesh"]["ElemType"]
@@ -34,6 +36,20 @@ def stiff_assembly():
         
         assamk(doflist, rigimat)
 
+def mass_assembly():
+    mesh_type = globalvars.data["Mesh"]["ElemType"]
+    for elem in globalvars.data["Mesh"]["Elements"]:
+        massMatrix= CalcMassMatrix(mesh_type, elem)
+        conec_list = elem["Connectivities"]
+        doflist = np.zeros((len(conec_list)*globalvars.ndof), dtype=int)
+        idof = 0
+        for inode in range(len(conec_list)):
+            id_node = conec_list[inode]-1
+            for igl in range(globalvars.ndof):
+                doflist[idof] =  globalvars.madgln[id_node, igl]
+                idof += 1
+        
+        assamMass(doflist, massMatrix)
 
 def loads_assembly():
     if ("Loads" in globalvars.data):
@@ -59,7 +75,6 @@ def loads_assembly():
         if("Body_Loads" in Loads):
             for elemLoad in Loads["Body_Loads"]:
                 bodyLoadsAssembly(elemLoad,elemType)
-
 
 
 def stiffness_BAR02(elem):
@@ -159,6 +174,58 @@ def stiffnessMatCalc(elem, ElemType, ProblemType, Dmat):
         rigimat += rigimat_pg
     return rigimat
 
+def CalcMassMatrix(ElemType, elem):
+    nnodes = GiveNnodes(ElemType)
+    ngauss = Set_Ngauss(ElemType)
+    mat_id = elem["MaterialId"] - 1
+    material = globalvars.data["Materials"][mat_id]
+    Nodes = globalvars.data["Mesh"]["Nodes"]
+    pos_pg, W = GaussQuadrature(ElemType)
+ 
+    if(globalvars.data["ProblemType"] == "Thermal"):
+        rho = material["Specific_Heat"]
+        nrows = nnodes
+        ncols = nnodes
+        ngl = 1
+    elif(globalvars.data["ProblemType"] == "Structural_Mechanics"):
+        rho = material["Density"]
+        if (ElemType == "BAR02"):
+            nrows = nnodes
+            ncols = nnodes
+            ngl = 1
+        else:
+            nrows = nnodes * 2
+            ncols = nnodes * 2
+            ngl = 2
+        
+        if (ElemType == "BAR02" or ElemType == "TRUSS02"):
+            rho *= material["Area"]
+        elif(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
+            thickness = 1.0
+            if(material["Plane_Type"] == "Plane_Stress"):
+                thickness = material["Thickness"]
+            rho *= thickness
+
+    massMatrix = np.zeros((nrows,ncols), dtype=float)
+    localMat = np.zeros((ngl,ngl), dtype=float)
+    massMatrix_pg = np.zeros((ngl,ngl), dtype=float)
+
+    for inode in range(nnodes):
+        for jnode in range(nnodes):
+            irow_ini = inode * ngl
+            irow_end = irow_ini + ngl
+            icol_ini = jnode * ngl
+            icol_end = icol_ini +  ngl
+            for igauss in range(ngauss):
+                fform = FuncForm(ElemType, pos_pg, igauss)
+                for igl in range(ngl):
+                    localMat[igl,igl] = fform[inode] * fform[jnode]
+                det_Jac, _ = derivCartesian(elem, ElemType, Nodes, pos_pg[igauss])
+                massMatrix_pg[:ngl,:ngl] = localMat[:ngl,:ngl]* rho * W[igauss] * det_Jac
+                massMatrix[irow_ini:irow_end,icol_ini:icol_end] += massMatrix_pg[:ngl,:ngl]
+  
+    return massMatrix
+
 def bodyLoadsAssembly(elemLoad, elemType):
     elemIndex = elemLoad["Elem"] -1
     elem = globalvars.data["Mesh"]["Elements"][elemIndex]
@@ -221,6 +288,14 @@ def assamk(doflist, rigimat):
       for jdofn in range(ndof):
         jpos = doflist[jdofn]
         globalvars.astiff[ipos, jpos] += rigimat[idofn, jdofn]
+
+def assamMass(doflist, massmat):
+  ndof = len(doflist)
+  for idofn in range(ndof):
+      ipos = doflist[idofn]
+      for jdofn in range(ndof):
+        jpos = doflist[jdofn]
+        globalvars.amassmat[ipos, jpos] += massmat[idofn, jdofn]
 
 
 def assamf(doflist, fvect):
