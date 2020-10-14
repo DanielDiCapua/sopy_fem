@@ -2,7 +2,8 @@ import json
 import os
 import sys
 
-exampleTypesSet = {"electrical_BR02",
+exampleTypesSet = {"dynamics_TRUSS02",
+                    "electrical_BR02",
                     "mechanics_BR02",
                     "mechanics_QU04",
                     "mechanics_TR03",
@@ -10,7 +11,7 @@ exampleTypesSet = {"electrical_BR02",
                     "thermal_BR02"
                 }
 
-def sopy_fem_help(exampleType="", basePath=""):
+def sopy_fem_help(exampleType="", basePath="Examples"):
     if (exampleType in exampleTypesSet):
         fileName = basePath + exampleType + "/data.json"
         with open(fileName, "r") as exampleFile:

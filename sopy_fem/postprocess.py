@@ -58,12 +58,23 @@ def postprocess():
 
         if("Show_reactions" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_reactions"]):
             writeReactions()
-
-        resultsFile = globalvars.dataFileName.replace(".json", ".res.json")
-        with open(resultsFile, 'w') as json_file:
-            json.dump(globalvars.results, json_file, indent = 4)
         
         plt.show()
+    elif (globalvars.data["AnalysisType"] == "DynamicsAnalysis"):
+        plt.rcParams["axes.spines.right"] = True
+        plt.rcParams["axes.spines.top"] = True
+        plotMesh()
+
+        if ("Show_vibration_modes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_vibration_modes"]):
+            plotVibrationModes()
+
+        if ("Show_dynamics_evolution" in globalvars.data["Postprocess"] and len(globalvars.data["Postprocess"]["Show_dynamics_evolution"]) !=0):
+            plotDynamicsEvolution()
+        plt.show()
+
+    resultsFile = globalvars.dataFileName.replace(".json", ".res.json")
+    with open(resultsFile, 'w') as json_file:
+        json.dump(globalvars.results, json_file, indent = 4)
 
 def plotDisplacements():
     mesh = globalvars.data["Mesh"]
@@ -107,7 +118,7 @@ def plotDisplacements():
         plotNodalBarResult("Horizontal displacements", r"$u_x$ (m)", nodal_disp_x)
         plotNodalBarResult("Vertical displacements", r"$u_y$ (m)", nodal_disp_y)
         if ("Show_deformed" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_deformed"]):
-            plotDeformed()
+            plotDeformed(globalvars.u_vec, "Deformed")
 
 
 def plotStrains():
@@ -264,5 +275,78 @@ def writeReactions():
             }
         
         globalvars.results["Reactions"].append(react_results_node)
+
+def plotVibrationModes():
+    mesh = globalvars.data["Mesh"]
+    ElemType = mesh["ElemType"]
+    ndof = globalvars.ndof
+    nodal_disp_x = []
+    nodal_disp_y = []
+    numModes = globalvars.data["Dynamic_Analysis_Description"]["Num_Modes"]
+    for imode in range(numModes):
+        labeliMode = "Vibration_Mode_" + str(imode+1)
+        globalvars.results[labeliMode] = {
+            "Natural_Freq (Hz)": '{0:.3g}'.format(globalvars.natFreqVec[imode]),
+            "Displacements": []
+        }
+
+        for inode in range(len(globalvars.data["Mesh"]["Nodes"])):
+            idire_x = globalvars.madgln[inode, 0]
+            disp_x = globalvars.vibrationModes[imode, idire_x]
+            nodal_disp_x.append(disp_x)
+
+            if(ndof == 1):
+                nodal_disp_res = {
+                    "Node": inode+1,
+                    "Disp_x": "{:10.4e}".format(disp_x),
+                }
+            elif(ndof == 2):
+                idire_y = globalvars.madgln[inode, 1]
+                disp_y = globalvars.vibrationModes[imode, idire_y]
+                nodal_disp_y.append(disp_y)
+                nodal_disp_res = {
+                    "Node": inode+1,
+                    "Disp_x": "{:10.4e}".format(disp_x),
+                    "Disp_y": "{:10.4e}".format(disp_y)
+                }
+
+            globalvars.results[labeliMode]["Displacements"].append(nodal_disp_res)
+        
+        if (ElemType == "TRUSS02"):
+            if ("Show_vibration_modes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_vibration_modes"]):
+                plotDeformed(globalvars.vibrationModes[imode,:], labeliMode)
+                
+
+def plotDynamicsEvolution():
+    font = {'family': 'serif',
+            'color':  'black',
+            'weight': 'normal',
+            'size': 12,
+            }
+
+    numInc = globalvars.data["Dynamic_Analysis_Description"]["Num_increments"]
+    deltaT = globalvars.data["Dynamic_Analysis_Description"]["DeltaT"]
+    t_vec = np.zeros((numInc), dtype=float)
+    res_vec = np.zeros((numInc), dtype=float)
+    for istep in range(numInc):
+        t_vec[istep] = deltaT * istep
+    
+    for plot in globalvars.data["Postprocess"]["Show_dynamics_evolution"]:
+        id_node = plot["Node"] - 1
+        figTitle = plot["Result"] + " in node " + str(plot["Node"])
+        if (plot["Result"] == "Disp_x"):
+            igl = 0
+        elif (plot["Result"] == "Disp_y"):
+            igl = 1
+        idire = globalvars.madgln[id_node, igl]
+        for istep in range(numInc):
+            res_vec[istep] = globalvars.dynamics_uvec[istep, idire]
+            
+        plt.figure(figTitle)
+        plt.plot(t_vec, res_vec)
+        plt.xlabel('time (s)', fontdict=font)
+        plt.ylabel(plot["Result"], fontdict=font)
+        
+
         
 

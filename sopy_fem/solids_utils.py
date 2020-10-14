@@ -251,12 +251,27 @@ def det_Jacob(elem, ElemType, Nodes, pos_pg):
 def derivCartesian(elem, ElemType, Nodes, pos_pg):
   ndime = GiveNdime(ElemType)
   nnodes = GiveNnodes(ElemType)
-  corel = np.zeros((nnodes,ndime), dtype=float)
+  corel = np.zeros((nnodes, ndime), dtype=float)
+  if (ElemType == "TRUSS02"):
+    node1 = elem["Connectivities"][0] - 1
+    x1 = globalvars.data["Mesh"]["Nodes"][node1]["x"]
+    y1 = globalvars.data["Mesh"]["Nodes"][node1]["y"]
+    node2 = elem["Connectivities"][1] - 1
+    x2 = globalvars.data["Mesh"]["Nodes"][node2]["x"]
+    y2 = globalvars.data["Mesh"]["Nodes"][node2]["y"]
+    length = math.sqrt((x2 - x1)** 2 + (y2 - y1)** 2)
+
   for inode in range(nnodes):
     id_node = elem["Connectivities"][inode] - 1
     for idime in range(ndime):
-      if(idime == 0):
-        corel[inode, idime] = Nodes[id_node]["x"]
+      if (idime == 0):
+        if (ElemType == "TRUSS02"):
+          if (inode == 0):
+            corel[inode, idime] = 0.0
+          else:
+            corel[inode, idime] = length
+        else:
+          corel[inode, idime] = Nodes[id_node]["x"]
       elif (idime == 1):
         corel[inode, idime] = Nodes[id_node]["y"]
 

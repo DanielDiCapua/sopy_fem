@@ -1,0 +1,22 @@
+{
+    "Vibration_Mode_1": {
+        "Natural_Freq (Hz)": "0.159",
+        "Displacements": [
+            {
+                "Node": 1,
+                "Disp_x": "0.0000e+00",
+                "Disp_y": "0.0000e+00"
+            },
+            {
+                "Node": 2,
+                "Disp_x": "4.3371e-01",
+                "Disp_y": "-1.3785e-01"
+            },
+            {
+                "Node": 3,
+                "Disp_x": "0.0000e+00",
+                "Disp_y": "0.0000e+00"
+            }
+        ]
+    }
+}

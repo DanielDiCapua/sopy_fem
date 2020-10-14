@@ -76,8 +76,12 @@ def initialization():
 
     if(globalvars.data["ProblemType"] == "Structural_Mechanics" and globalvars.data["AnalysisType"] == "DynamicsAnalysis"):
       globalvars.amassmat = np.zeros((globalvars.neq, globalvars.neq), dtype=float)
-      globalvars.natfreq_vec = np.zeros((globalvars.neq), dtype=float)
-      globalvars.vibrationModes = np.zeros((globalvars.neq, globalvars.neq), dtype=float)
+      numModes = globalvars.data["Dynamic_Analysis_Description"]["Num_Modes"]
+      globalvars.natFreqVec = np.zeros((numModes), dtype=float)
+      globalvars.vibrationModes = np.zeros((numModes, globalvars.neq), dtype=float)
+      numInc = globalvars.data["Dynamic_Analysis_Description"]["Num_increments"]
+      globalvars.dynamics_uvec = np.zeros((numInc, globalvars.neq), dtype=float)
+      globalvars.modal_disp = np.zeros((numModes, numInc), dtype=float)
 
     num_known = globalvars.neq - globalvars.num_unknows
     globalvars.u_known = np.zeros((num_known), dtype=float)

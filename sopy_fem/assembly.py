@@ -74,7 +74,25 @@ def loads_assembly():
 
         if("Body_Loads" in Loads):
             for elemLoad in Loads["Body_Loads"]:
-                bodyLoadsAssembly(elemLoad,elemType)
+                bodyLoadsAssembly(elemLoad, elemType)
+
+def dynamics_loads_assembly(t):
+    globalvars.asload[:] = 0.0   
+    if ("Dynamics_Loads" in globalvars.data):
+        DynamicsLoads = globalvars.data["Dynamics_Loads"]
+        if ("Harmonic_Point_Loads" in DynamicsLoads):
+            doflist = np.zeros((globalvars.ndof), dtype=int)
+            fvect = np.zeros((globalvars.ndof), dtype=float)
+            for dynPointLoad in DynamicsLoads["Harmonic_Point_Loads"]:
+                id_node = dynPointLoad["Node"] - 1
+                idof = 0
+                for igl in range(globalvars.ndof):
+                    doflist[idof] = globalvars.madgln[id_node, igl]
+                    frequency = dynPointLoad["Load_Frequency(Hz)"]
+                    fact = math.sin(2.0*math.pi*frequency*t)
+                    fvect[idof] = dynPointLoad["Amplitudes"][igl]*fact
+                    idof += 1
+                assamf(doflist, fvect)
 
 
 def stiffness_BAR02(elem):
@@ -215,7 +233,7 @@ def CalcMassMatrix(ElemType, elem):
             irow_ini = inode * ngl
             irow_end = irow_ini + ngl
             icol_ini = jnode * ngl
-            icol_end = icol_ini +  ngl
+            icol_end = icol_ini + ngl
             for igauss in range(ngauss):
                 fform = FuncForm(ElemType, pos_pg, igauss)
                 for igl in range(ngl):

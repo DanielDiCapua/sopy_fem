@@ -25,8 +25,8 @@ def plotMesh(figTitle="Mesh"):
     label2d(coords, elemList, ax)
     window.tight_layout()
 
-def plotDeformed():
-    window = plt.figure("Deformed")
+def plotDeformed(u_vec, figTitle):
+    window = plt.figure(figTitle)
     nodes = globalvars.data["Mesh"]["Nodes"]
     coords = np.zeros((len(nodes), 2), dtype=float)
     scale_disp = globalvars.scale_disp
@@ -35,8 +35,8 @@ def plotDeformed():
     for i, node in enumerate(nodes):
         idire_x = globalvars.madgln[i, 0]
         idire_y = globalvars.madgln[i, 1]
-        disp_x = globalvars.u_vec[idire_x]
-        disp_y = globalvars.u_vec[idire_y]
+        disp_x = u_vec[idire_x]
+        disp_y = u_vec[idire_y]
         coords[i, 0] = node["x"] + scale_disp*disp_x
         coords[i, 1] = node["y"] + scale_disp*disp_y
 
