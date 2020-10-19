@@ -11,7 +11,7 @@ exampleTypesSet = {"dynamics_TRUSS02",
                     "thermal_BR02"
                 }
 
-def sopy_fem_help(exampleType="", basePath="Examples/"):
+def sopy_fem_help(exampleType="", basePath="sopy_fem/sopy_fem/Examples/"):
     if (exampleType in exampleTypesSet):
         fileName = basePath + exampleType + "/data.json"
         with open(fileName, "r") as exampleFile:
