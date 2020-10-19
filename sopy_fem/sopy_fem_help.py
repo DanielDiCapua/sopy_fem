@@ -12,9 +12,7 @@ exampleTypesSet = {"dynamics_TRUSS02",
                 }
 
 def sopy_fem_help(exampleType="", basePath="Examples/"):
-    if (exampleType in exampleTypesSet):
-        path = os.getcwd()
-        print("Current directory=", path)      
+    if (exampleType in exampleTypesSet):   
         fileName = basePath + exampleType + "/data.json"
         with open(fileName, "r") as exampleFile:
             jsonText = json.load(exampleFile)
