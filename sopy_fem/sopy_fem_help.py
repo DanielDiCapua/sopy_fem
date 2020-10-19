@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import sopy_fem
 
 exampleTypesSet = {"dynamics_TRUSS02",
                     "electrical_BR02",
