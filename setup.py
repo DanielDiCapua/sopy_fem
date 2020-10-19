@@ -1,4 +1,4 @@
-from setuptools import setup
+from distutils.core import setup
 setup(
   name = 'sopy_fem',
   packages = ['sopy_fem'], # this must be the same as the name above
