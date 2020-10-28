@@ -32,15 +32,15 @@ def solve():
         Auu = globalvars.astiff[:n,:n]
         Muu = globalvars.amassmat[:n,:n]
         eigvals, eigvecs = scipy.linalg.eig(Auu, Muu)
+        eigvals_ord, eigvecs_ord = orderingEigvalsAndEigevecs(eigvals, eigvecs)
         numModes = globalvars.data["Dynamic_Analysis_Description"]["Num_Modes"]
         for imode in range(numModes):
-            globalvars.natFreqVec[imode] = math.sqrt(eigvals[imode].real)/(2.0*math.pi)
-            globalvars.vibrationModes[imode,:n] =  eigvecs[:neq, imode]
+            globalvars.natFreqVec[imode] = math.sqrt(eigvals_ord[imode])/(2.0*math.pi)
+            globalvars.vibrationModes[imode,:n] =  eigvecs_ord[:neq, imode]
             A = globalvars.vibrationModes[imode,:]
             MxA = np.matmul(globalvars.amassmat, globalvars.vibrationModes[imode,:])
             AtxMxA = np.dot(A, MxA)
             globalvars.vibrationModes[imode,:neq] = A/math.sqrt(AtxMxA)
-        
         DynamicsAnalyis()
 
 
@@ -80,7 +80,32 @@ def DynamicsAnalyis():
         for imode in range(numModes):
             A = globalvars.vibrationModes[imode,:neq]
             globalvars.dynamics_uvec[istep,:] += globalvars.modal_disp[imode, istep] * A
-            
+
+
+def orderingEigvalsAndEigevecs(eigvals, eigvecs):
+    num_rows, num_columns = eigvecs.shape
+    eigvals_ord = np.zeros((num_rows), dtype='float')
+    eigvecs_ord = np.zeros((num_rows, num_columns), dtype='float')
+    num_columns += 1
+    big_mat = np.zeros((num_rows, num_columns), dtype='float')
+    for irow in range(num_rows):
+        big_mat[irow, 0] = eigvals[irow].real
+        for icol in range(1,num_columns):
+            big_mat[irow, icol] = eigvecs[(icol - 1), irow]
+    
+    big_mat_sorted = big_mat[big_mat[:, 0].argsort()]
+
+    for irow in range(num_rows):
+        eigvals_ord[irow] = big_mat_sorted[irow, 0]
+        for icol in range(1,num_columns):
+            eigvecs_ord[(icol - 1), irow] = big_mat_sorted[irow, icol]
+    
+    return eigvals_ord, eigvecs_ord
+    
+
+    
+    
+
             
             
             

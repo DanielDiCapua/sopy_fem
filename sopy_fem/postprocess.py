@@ -68,7 +68,7 @@ def postprocess():
         if ("Show_vibration_modes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_vibration_modes"]):
             plotVibrationModes()
 
-        if ("Show_dynamics_evolution" in globalvars.data["Postprocess"] and len(globalvars.data["Postprocess"]["Show_dynamics_evolution"]) !=0):
+        if ("Show_dynamics_evolution" in globalvars.data["Postprocess"] and len(globalvars.data["Postprocess"]["Show_dynamics_evolution"]) != 0):
             plotDynamicsEvolution()
         plt.show()
 
@@ -284,9 +284,10 @@ def plotVibrationModes():
     nodal_disp_y = []
     numModes = globalvars.data["Dynamic_Analysis_Description"]["Num_Modes"]
     for imode in range(numModes):
-        labeliMode = "Vibration_Mode_" + str(imode+1)
+        freq = globalvars.natFreqVec[imode]
+        labeliMode = "Vibration_Mode_" + str(imode+1) + " (Freq: " + '{0:.4g}'.format(freq) + "Hz)"
         globalvars.results[labeliMode] = {
-            "Natural_Freq (Hz)": '{0:.3g}'.format(globalvars.natFreqVec[imode]),
+            "Natural_Freq (Hz)": '{0:.4g}'.format(freq),
             "Displacements": []
         }
 
@@ -343,6 +344,7 @@ def plotDynamicsEvolution():
             res_vec[istep] = globalvars.dynamics_uvec[istep, idire]
             
         plt.figure(figTitle)
+        plt.title(figTitle)
         plt.plot(t_vec, res_vec)
         plt.xlabel('time (s)', fontdict=font)
         plt.ylabel(plot["Result"], fontdict=font)

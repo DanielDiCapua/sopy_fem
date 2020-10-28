@@ -241,7 +241,6 @@ def CalcMassMatrix(ElemType, elem):
                 det_Jac, _ = derivCartesian(elem, ElemType, Nodes, pos_pg[igauss])
                 massMatrix_pg[:ngl,:ngl] = localMat[:ngl,:ngl]* rho * W[igauss] * det_Jac
                 massMatrix[irow_ini:irow_end,icol_ini:icol_end] += massMatrix_pg[:ngl,:ngl]
-  
     return massMatrix
 
 def bodyLoadsAssembly(elemLoad, elemType):

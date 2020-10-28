@@ -23,6 +23,7 @@ def plotMesh(figTitle="Mesh"):
     fig, ax = plot_nodes(coords, color='k')
     fig, ax = plot_elems(coords, elemList, fig, ax, color='C7')
     label2d(coords, elemList, ax)
+    plt.title("Mesh")
     window.tight_layout()
 
 def plotDeformed(u_vec, figTitle):
@@ -48,6 +49,7 @@ def plotDeformed(u_vec, figTitle):
     fig, ax = plot_nodes(coords, color='k')
     fig, ax = plot_elems(coords, E, fig, ax, color='C7')
     label2d(coords, E, ax)
+    plt.title(figTitle.replace("_"," "))
     window.tight_layout()
     
 def plotElemIntFluxes(figTitle, plotTitle):
