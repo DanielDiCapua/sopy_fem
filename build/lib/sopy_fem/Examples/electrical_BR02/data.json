@@ -1,0 +1,62 @@
+{
+    "ProblemType": "Electrical",
+    "AnalysisType": "StaticAnalysis",
+    "Mesh": {
+        "ElemType": "BAR02",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 1.0
+            },
+            {
+                "x": 0.0,
+                "y": 1.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 2],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 3],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [3, 4],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Electrical_Conductivity": 0.03,
+            "Area": 0.0008
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1],
+            "Values": [0.0]
+        },
+        {
+            "Node": 4,
+            "Activation": [4],
+            "Values": [50.0]
+        }
+    ],
+    "Postprocess": {
+        "Show_voltage": true,
+        "Show_current_intensity": true,
+        "Show_reactions": true
+    }
+}

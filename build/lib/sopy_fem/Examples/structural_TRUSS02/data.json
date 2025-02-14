@@ -1,0 +1,66 @@
+{
+    "ProblemType": "Structural_Mechanics",
+    "AnalysisType": "StaticAnalysis",
+    "Mesh": {
+        "ElemType": "TRUSS02",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 1.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 2],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 3],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Young": 20000,
+            "Density": 7800,
+            "Area": 0.01
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        },
+        {
+            "Node": 3,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        }
+
+    ],
+    "Loads": {
+        "Point_Loads": [
+            {
+                "Node": 2,
+                "Values": [10.0, 0]
+            }
+        ]
+    },
+    "Postprocess": {
+        "Show_displacements": true,
+        "Show_deformed": true,
+        "Deformed_scale": 1.2,
+        "Show_forces": true,
+        "Show_reactions": true
+    }
+}

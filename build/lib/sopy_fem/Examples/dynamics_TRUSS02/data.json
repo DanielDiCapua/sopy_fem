@@ -1,0 +1,75 @@
+{
+    "ProblemType": "Structural_Mechanics",
+    "AnalysisType": "DynamicsAnalysis",
+    "Dynamic_Analysis_Description": {
+        "Num_Modes": 1,
+        "Num_increments": 800,
+        "DeltaT": 0.1,
+        "Damping_ratio":0.0
+    },
+    "Mesh": {
+        "ElemType": "TRUSS02",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 1.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 2],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 3],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Young": 20000,
+            "Density": 6000,
+            "Area": 0.001
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        },
+        {
+            "Node": 3,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        }
+    ],
+    "Dynamics_Loads": {
+        "Harmonic_Point_Loads": [
+            {
+                "Node": 2,
+                "Amplitudes": [1.0, 0],
+                "Load_Frequency(Hz)": 0.159
+            }
+        ]
+    },
+    "Postprocess": {
+        "Show_vibration_modes": true,
+        "Deformed_scale": 1.2,
+        "Show_dynamics_evolution": [
+            {
+                "Node": 2,
+                "Result": "Disp_x"
+             }
+        ]
+    }
+}

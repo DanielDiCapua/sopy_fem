@@ -1,0 +1,62 @@
+{
+    "ProblemType": "Thermal",
+    "AnalysisType": "StaticAnalysis",
+    "Mesh": {
+        "ElemType": "BAR02",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            },
+            {
+                "x": 2.0,
+                "y": 0.0
+            },
+            {
+                "x": 3.0,
+                "y": 0.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 2],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [2, 3],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [3, 4],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Thermal_Conductivity": 5,
+            "Area": 1.0
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1],
+            "Values": [10.0]
+        },
+        {
+            "Node": 4,
+            "Activation": [1],
+            "Values": [30.0]
+        }
+    ],
+    "Postprocess": {
+        "Show_temperatures": true,
+        "Show_thermal_fluxes": true,
+        "Show_reactions": true
+    }
+}

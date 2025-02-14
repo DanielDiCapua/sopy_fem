@@ -1,0 +1,89 @@
+{
+    "ProblemType": "Structural_Mechanics",
+    "AnalysisType": "StaticAnalysis",
+    "Mesh": {
+        "ElemType": "QU04",
+        "Nodes": [
+            {
+                "x": 0.0,
+                "y": 0.0
+            },
+            {
+                "x": 1.0,
+                "y": 0.0
+            },
+            {
+                "x": 0.0,
+                "y": 1.0
+            },
+            {
+                "x": 1.0,
+                "y": 1.0
+            },
+            {
+                "x": 0.0,
+                "y": 2.0
+            },
+            {
+                "x": 1.0,
+                "y": 2.0
+            }
+        ],
+        "Elements": [
+            {
+                "Connectivities": [1, 2, 4, 3],
+                "MaterialId": 1
+            },
+            {
+                "Connectivities": [3, 4, 6, 5],
+                "MaterialId": 1
+            }
+        ]
+    },
+    "Materials": [
+        {
+            "Plane_Type": "Plane_Stress",
+            "Young": 20000,
+            "Density": 7800,
+            "Poisson": 0.2,
+            "Thickness": 1.0
+        }
+    ],
+    "Constraints": [
+        {
+            "Node": 1,
+            "Activation": [1, 1],
+            "Values": [0.0, 0.0]
+        },
+        {
+            "Node": 2,
+            "Activation": [0, 1],
+            "Values": [0.0, 0.0]
+        }
+    ],
+    "Loads": {
+        "Line_Loads": [
+            {
+                "Node_ini": 5,
+                "Node_end": 6,
+                "qy": -10
+            }
+        ],
+        "Body_Loads": [
+            {
+                "Elem": 1,
+                "qy": -5
+            },
+            {
+                "Elem": 2,
+                "qy": -5
+            }
+        ]
+    },
+    "Postprocess": {
+        "Show_displacements": true,
+        "Show_strains": true,
+        "Show_stresses": true,
+        "Show_reactions": true
+    }
+}
