@@ -21,13 +21,15 @@ plt.rcParams["axes.edgecolor"] = gray
 plt.rcParams["axes.spines.right"] = False
 plt.rcParams["axes.spines.top"] = False
 
+# |========== Postprocess ==========|
+
 def postprocess():
     if(globalvars.data["AnalysisType"] == "StaticAnalysis"):
         ElemType = globalvars.data["Mesh"]["ElemType"]
         if("Show_displacements" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_displacements"]):
             plotDisplacements()
 
-        if(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
+        if(ElemType in ["TR03", "TR06", "QU04", "QU08", "QU09"]):
             if ("Show_strains" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_strains"]):
                 plotStrains()
             
@@ -36,7 +38,7 @@ def postprocess():
 
             if("Show_forces" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_forces"]):
                 plotForces()
-        elif (ElemType == "BAR02" or ElemType == "BAR03" or ElemType == "TRUSS02"):
+        elif (ElemType in ["BAR02", "BAR03", "TRUSS02"]):
             plt.rcParams["axes.spines.right"] = True
             plt.rcParams["axes.spines.top"] = True
             plotMesh()
@@ -75,6 +77,8 @@ def postprocess():
     resultsFile = globalvars.dataFileName.replace(".json", ".res.json")
     with open(resultsFile, 'w') as json_file:
         json.dump(globalvars.results, json_file, indent = 4)
+
+# |========== Plot displacements ==========|
 
 def plotDisplacements():
     mesh = globalvars.data["Mesh"]
@@ -117,10 +121,10 @@ def plotDisplacements():
 
         globalvars.results["Displacements"].append(nodal_disp_res)
     
-    if(ElemType == "TR03" or ElemType == "TR06" or ElemType == "QU04" or ElemType == "QU08" or ElemType == "QU09"):
+    if(ElemType in ["TR03", "TR06", "QU04", "QU08", "QU09"]):
         plot_contour(mesh, nodal_disp_x, "Displacements x", r"$u_x$ (m)")
         plot_contour(mesh, nodal_disp_y, "Displacements y", r"$u_y$ (m)")
-    elif (ElemType == "BAR02" or ElemType == "BAR03"):
+    elif (ElemType in ["BAR02", "BAR03"]):
         plt.rcParams["axes.spines.right"] = True
         plt.rcParams["axes.spines.top"] = True
         plotNodalBarResult("Displacements", r"$u_x$ (m)", nodal_disp_x)
@@ -131,7 +135,17 @@ def plotDisplacements():
         plotNodalBarResult("Vertical displacements", r"$u_y$ (m)", nodal_disp_y)
         if ("Show_deformed" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_deformed"]):
             plotDeformed(globalvars.u_vec, "Deformed")
+    elif ElemType == "FRAME02":
+        plt.rcParams["axes.spines.right"] = True
+        plt.rcParams["axes.spines.top"] = True
+        plotMesh()
+        plotNodalBarResult("Horizontal displacements", r"$u_x$ (m)", nodal_disp_x)
+        plotNodalBarResult("Vertical displacements", r"$u_y$ (m)", nodal_disp_y)
+        if ("Show_deformed" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_deformed"]):
+            plotDeformed(globalvars.u_vec, "Deformed")
+        
 
+# |========== Plot Strains ==========|
 
 def plotStrains():
     mesh = globalvars.data["Mesh"]
@@ -159,6 +173,7 @@ def plotStrains():
         plot_contour(mesh, nodal_Epsilon[:,1], "Strains Epsilon_y", r"$\epsilon_{y}$")
         plot_contour(mesh, nodal_Epsilon[:,2], "Strains Gama_xy", r"$\gamma_{xy}$")
 
+# |========== Plot Stresses ==========|
 
 def plotStresses():
     mesh = globalvars.data["Mesh"]
@@ -186,6 +201,7 @@ def plotStresses():
         plot_contour(mesh, nodal_Sigma[:,1], "Stresses Sigma_y", r"$\sigma_{y}$")
         plot_contour(mesh, nodal_Sigma[:,2], "Stresses Tau_xy", r"$\tau_{xy}$")
         
+# |========== Plot Forces ==========|
 
 def plotForces():
     mesh = globalvars.data["Mesh"]
@@ -213,6 +229,8 @@ def plotForces():
         plot_contour(mesh, nodal_Forces[:,1], "Internal Forces N_y", r"$N_{y}$")
         plot_contour(mesh, nodal_Forces[:, 2], "Internal Forces N_xy", r"$N_{xy}$")
 
+# |========== Plot Temperatures ==========|
+
 def plotTemperatures():
     mesh = globalvars.data["Mesh"]
     ElemType = mesh["ElemType"]
@@ -234,7 +252,9 @@ def plotTemperatures():
         plot_contour(mesh, nodal_temp, "Temperatures", r"$Temp$ ($^\circ$C)")
     elif (ElemType == "BAR02" or ElemType == "BAR03"):
         plotNodalBarResult("Temperatures", r"$Temp$ ($^\circ$C)", nodal_temp)
-        
+
+# |========== Plot Voltajes ==========|
+
 def plotVoltage():
     mesh = globalvars.data["Mesh"]
     ElemType = mesh["ElemType"]
@@ -254,6 +274,8 @@ def plotVoltage():
     
     if (ElemType == "BAR02" or ElemType == "BAR03"):
         plotNodalBarResult("Voltage", r"$Voltage$ (V)", nodal_temp)
+
+# |========== Write Reactions ==========|
 
 def writeReactions(ElemType):
     globalvars.results["Reactions"] = []
@@ -305,6 +327,8 @@ def writeReactions(ElemType):
         
         globalvars.results["Reactions"].append(react_results_node)
 
+# |========== Plot Vibration Modes ==========|
+
 def plotVibrationModes():
     mesh = globalvars.data["Mesh"]
     ElemType = mesh["ElemType"]
@@ -346,6 +370,7 @@ def plotVibrationModes():
             if ("Show_vibration_modes" in globalvars.data["Postprocess"] and globalvars.data["Postprocess"]["Show_vibration_modes"]):
                 plotDeformed(globalvars.vibrationModes[imode,:], labeliMode)
                 
+# |========== Plot Dynamics Evolution ==========|
 
 def plotDynamicsEvolution():
     font = {'family': 'serif',
@@ -377,7 +402,31 @@ def plotDynamicsEvolution():
         plt.plot(t_vec, res_vec)
         plt.xlabel('time (s)', fontdict=font)
         plt.ylabel(plot["Result"], fontdict=font)
-        
 
+def plotform():
+    pass
+    '''
+        Fuerzas internas en los nodos de los elementos (del ejemplo) en coordenadas locales
         
-
+        E1
+        N1=145.725kN=-N2
+        V1=-19.936kN=-V2
+        M1=-16.286kN*m
+        M2=-43.523kN*m
+        
+        E2
+        N1=29.936kN=-N2
+        V1=145.725kN
+        V2=154.275kN
+        M1=43.523kN*m
+        M2=-56.349kN*m
+        
+        E3
+        N1=154.275kN=-N2
+        V1=29.936kN=-V2
+        M1=45,349kN*m
+        M2=33.460kn*m
+        
+        Usar funciones de forma mediante polinomio de Hermite para porticos planos
+    '''
+    

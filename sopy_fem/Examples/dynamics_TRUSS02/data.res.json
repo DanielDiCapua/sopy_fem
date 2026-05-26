@@ -1,6 +1,6 @@
 {
-    "Vibration_Mode_1": {
-        "Natural_Freq (Hz)": "0.159",
+    "Vibration_Mode_1 (Freq: 0.1591Hz)": {
+        "Natural_Freq (Hz)": "0.1591",
         "Displacements": [
             {
                 "Node": 1,

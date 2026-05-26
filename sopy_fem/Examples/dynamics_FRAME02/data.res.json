@@ -1,6 +1,6 @@
 {
-    "Vibration_Mode_1 (Freq: 4.221Hz)": {
-        "Natural_Freq (Hz)": "4.221",
+    "Vibration_Mode_1 (Freq: 2.558Hz)": {
+        "Natural_Freq (Hz)": "2.558",
         "Displacements": [
             {
                 "Node": 1,
@@ -15,57 +15,57 @@
             {
                 "Node": 3,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "6.8658e-02"
+                "Disp_y": "3.9348e-02"
             },
             {
                 "Node": 4,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "2.5990e-01"
+                "Disp_y": "1.5009e-01"
             },
             {
                 "Node": 5,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "5.5179e-01"
+                "Disp_y": "3.2132e-01"
             },
             {
                 "Node": 6,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "9.2290e-01"
+                "Disp_y": "5.4223e-01"
             },
             {
                 "Node": 7,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "1.3529e+00"
+                "Disp_y": "8.0225e-01"
             },
             {
                 "Node": 8,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "1.8231e+00"
+                "Disp_y": "1.0912e+00"
             },
             {
                 "Node": 9,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "2.3176e+00"
+                "Disp_y": "1.3994e+00"
             },
             {
                 "Node": 10,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "2.5699e+00"
+                "Disp_y": "1.5579e+00"
             },
             {
                 "Node": 11,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "2.8238e+00"
+                "Disp_y": "1.7180e+00"
             },
             {
                 "Node": 12,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "3.0784e+00"
+                "Disp_y": "1.8788e+00"
             },
             {
                 "Node": 13,
                 "Disp_x": "0.0000e+00",
-                "Disp_y": "3.3333e+00"
+                "Disp_y": "2.0399e+00"
             }
         ]
     }

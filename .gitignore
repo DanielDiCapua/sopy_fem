@@ -1,16 +1,15 @@
 # Python
 __pycache__/
-sopy_fem/__pycache__
 *.pyc
 
-# virtualenv
+# Virtual Environments
 venv/
 .env/
 .venv/
 env/
 *_env/
 
-# build
+# Build
 build/
 dist/
 *.egg-info/

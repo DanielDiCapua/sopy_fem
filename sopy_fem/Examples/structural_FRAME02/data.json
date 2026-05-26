@@ -38,9 +38,9 @@
     },
     "Materials": [
         {
-            "Young": 210.0e9,
-            "Area": 0.00335,
-            "Inertia": 0.0000214
+            "Young": 210.0e9, 
+            "Area": 3.35e-3,
+            "Inertia": 2.14e-5
         }
     ],
     "Constraints": [

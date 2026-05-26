@@ -40,7 +40,7 @@ def sopy_fem_help(exampleType="", basePath="", outputFile=""):
             print("\n")
             print("The example file can be sent to the console or to an output file:\n")
             print("  -For a console output use sopy_fem_help(<exampleType>) e.g.=> sopy_fem_help('mechanics_BR02') \n")
-            print("  -For a file output use sopy_fem_help(<exampleType>,outputfile=<jasonfileName>) e.g.=>  sopy_fem_help('mechanics_BR02',outputFile='mechanics_bars.json') \n")
+            print("  -For a file output use sopy_fem_help(<exampleType>, outputFile=<jsonfileName>) e.g.=>  sopy_fem_help('mechanics_BR02', outputFile='mechanics_bars.json') \n")
 
 
 if __name__ == '__main__':
